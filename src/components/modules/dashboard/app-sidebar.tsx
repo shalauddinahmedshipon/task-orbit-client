@@ -2,12 +2,14 @@
 
 import * as React from "react"
 import {
-  SquareTerminal,
   LayoutDashboard,
-  User,
   FolderKanban,
-  Image,
+  ClipboardList,
   Users,
+  BarChart3,
+  Settings,
+  Clock3,
+  User,
 } from "lucide-react"
 
 import {
@@ -17,109 +19,159 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar"
-
 import { NavMain } from "./nav-main"
 import { NavUser } from "./nav-user"
 import { TeamSwitcher } from "./team-switcher"
-
 import { useAppSelector } from "@/store/hooks"
 import type { NavItem } from "@/types/navigation.types"
 
-export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
-const { user, isAuthenticated } = useAppSelector((state) => state.auth)
+export function AppSidebar(
+  props: React.ComponentProps<typeof Sidebar>
+) {
+  const { user, isAuthenticated } = useAppSelector(
+    (state) => state.auth
+  )
 
-  // If not yet authenticated → show minimal / loading sidebar
-  if (!isAuthenticated) {
+  /* ----------------------------------------
+     Loading Sidebar
+  ----------------------------------------- */
+  if (!isAuthenticated || !user) {
     return (
       <Sidebar collapsible="icon" {...props}>
         <SidebarHeader>
-          <div className="h-10 bg-muted animate-pulse rounded-md" /> {/* placeholder */}
+          <div className="h-10 rounded-md bg-muted animate-pulse" />
         </SidebarHeader>
+
         <SidebarContent>
           <div className="space-y-4 p-4">
-            <div className="h-8 bg-muted animate-pulse rounded" />
-            <div className="h-8 bg-muted animate-pulse rounded" />
+            <div className="h-8 rounded bg-muted animate-pulse" />
+            <div className="h-8 rounded bg-muted animate-pulse" />
+            <div className="h-8 rounded bg-muted animate-pulse" />
           </div>
         </SidebarContent>
+
         <SidebarRail />
       </Sidebar>
     )
   }
-  /* ---------------------------
-     User & Team Data
-  ---------------------------- */
+
+  /* ----------------------------------------
+     Workspace / Team Data
+  ----------------------------------------- */
   const data = React.useMemo(
     () => ({
       user: {
-        name: user?.fullName ?? "MD.SHIPON",
-        email: user?.email ?? "shalauddinahmedshipon2018@gmail.com",
-        avatar: "/avatars/shadcn.jpg",
+        name: user.name,
+        email: user.email,
+        avatar: user.avatarUrl || "",
       },
+
       teams: [
         {
-          name: "MD.SHIPON",
-          logo: SquareTerminal,
-          plan: "Software Engineer",
+          name: "TaskOrbit",
+          logo: () => (
+  <img 
+    src="/eSoyq.jpg" 
+    alt="TaskOrbit" 
+    className="h-6 w-6 rounded" 
+  />),
+          plan: "Project Management System",
         },
       ],
     }),
     [user]
   )
 
-  /* ---------------------------
-     Navigation (IMMUTABLE)
-  ---------------------------- */
-  const navMain: NavItem[] = React.useMemo(() => {
-    const baseNav: NavItem[] = [
-      {
-        title: "Dashboard",
-        url: "/dashboard",
-        icon: LayoutDashboard,
-      },
-      {
-        title: "Profile",
-        icon: User,
-        items: [
-          { title: "Profile Info", url: "/dashboard/profile/general" },
-          { title: "Contact Info", url: "/dashboard/profile/contact" },
-          { title: "Coding Profiles", url: "/dashboard/profile/coding-profiles" },
-          { title: "Education", url: "/dashboard/profile/education" },
-          { title: "Experience", url: "/dashboard/profile/experience" },
-          { title: "Skills", url: "/dashboard/profile/skills" },
-        ],
-      },
-      {
-        title: "Content",
-        icon: FolderKanban,
-        items: [
-          { title: "Projects", url: "/dashboard/content/projects" },
-          { title: "Blogs", url: "/dashboard/content/blogs" },
-          { title: "Events", url: "/dashboard/content/events" },
-          { title: "Achievements", url: "/dashboard/content/achievements" },
-        ],
-      },
-      {
-        title: "Media",
-        icon: Image,
-        items: [{ title: "Gallery", url: "/dashboard/media/gallery" }],
-      },
-    ]
+  /* ----------------------------------------
+     Admin / Manager Navigation
+  ----------------------------------------- */
+  const adminNav: NavItem[] = [
+    {
+      title: "Dashboard",
+      url: "/dashboard/admin",
+      icon: LayoutDashboard,
+    },
 
-    // ✅ Role-based nav (NO mutation)
-    if (user?.role === "ADMIN") {
-      baseNav.push({
-        title: "Users",
-        url: "/dashboard/users",
-        icon: Users,
-      })
+    {
+      title: "Projects",
+      url: "/dashboard/admin/projects",
+      icon: FolderKanban,
+    },
+
+    {
+      title: "Tasks",
+      url: "/dashboard/admin/tasks",
+      icon: ClipboardList,
+    },
+
+    {
+      title: "Users",
+      url: "/dashboard/admin/users",
+      icon: Users,
+    },
+
+    {
+      title: "Reports",
+      url: "/dashboard/admin/reports",
+      icon: BarChart3,
+    },
+
+    {
+      title: "Settings",
+      url: "/dashboard/admin/settings",
+      icon: Settings,
+    },
+  ]
+
+  /* ----------------------------------------
+     Member Navigation
+  ----------------------------------------- */
+  const memberNav: NavItem[] = [
+    {
+      title: "Dashboard",
+      url: "/dashboard/member",
+      icon: LayoutDashboard,
+    },
+
+    {
+      title: "My Tasks",
+      url: "/dashboard/member/my-tasks",
+      icon: ClipboardList,
+    },
+
+    {
+      title: "Projects",
+      url: "/dashboard/member/projects",
+      icon: FolderKanban,
+    },
+
+    {
+      title: "Time Logs",
+      url: "/dashboard/member/time-logs",
+      icon: Clock3,
+    },
+
+    {
+      title: "Profile",
+      url: "/dashboard/member/profile",
+      icon: User,
+    },
+  ]
+
+  /* ----------------------------------------
+     Role-Based Navigation
+  ----------------------------------------- */
+  const navMain = React.useMemo(() => {
+    if (user.role === "member") {
+      return memberNav
     }
 
-    return baseNav
-  }, [user?.role])
+    return adminNav
+  }, [user.role])
 
-  /* ---------------------------
+  /* ----------------------------------------
      Render
-  ---------------------------- */
+  ----------------------------------------- */
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
@@ -138,5 +190,3 @@ const { user, isAuthenticated } = useAppSelector((state) => state.auth)
     </Sidebar>
   )
 }
-
-

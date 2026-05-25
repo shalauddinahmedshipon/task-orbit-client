@@ -3,6 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { Providers } from "./providers";
 import { Toaster } from "@/components/ui/sonner";
 import AuthBootstrap from "@/components/providers/AuthBootstrap";
+// @ts-ignore: side-effect import of CSS file without type declarations
+import "./globals.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

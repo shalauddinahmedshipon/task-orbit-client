@@ -29,7 +29,7 @@ export function NavMain({ items }: { items: NavItem[] }) {
 
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>Platform</SidebarGroupLabel>
+      {/* <SidebarGroupLabel>Platform</SidebarGroupLabel> */}
 
       <SidebarMenu>
         {items.map((item) => {
@@ -93,11 +93,11 @@ export function NavMain({ items }: { items: NavItem[] }) {
           /* -------------------------
              SINGLE LINK (0 or 1 child)
           -------------------------- */
-          const isActive =
-            href === "/dashboard"
-              ? pathname === "/dashboard"
-              : pathname.startsWith(href!)
-
+         const isActive =
+   pathname === href ||
+  (href !== "/dashboard/admin" &&
+    href !== "/dashboard/member" &&
+    pathname.startsWith(`${href}/`))
           return (
             <SidebarMenuItem key={item.title}>
               <SidebarMenuButton

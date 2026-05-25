@@ -1,7 +1,6 @@
 "use client"
 
 import * as React from "react"
-import { ChevronsUpDown, Plus } from "lucide-react"
 
 import {
   DropdownMenu,
@@ -26,8 +25,19 @@ export function TeamSwitcher({
   const { isMobile } = useSidebar()
   const [activeTeam, setActiveTeam] = React.useState(teams[0])
 
-  if (!activeTeam) {
-    return null
+  if (!activeTeam) return null
+
+  // Custom name renderer for TaskOrbit
+  const renderTeamName = (name: string) => {
+    if (name === "TaskOrbit") {
+      return (
+        <>
+          <span className="text-black">Task</span>
+          <span className="text-red-600">Orbit</span>
+        </>
+      )
+    }
+    return name
   }
 
   return (
@@ -43,13 +53,16 @@ export function TeamSwitcher({
                 <activeTeam.logo className="size-4" />
               </div>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">{activeTeam.name}</span>
-                <span className="truncate text-xs">{activeTeam.plan}</span>
+                <span className="truncate font-semibold text-base">
+                  {renderTeamName(activeTeam.name)}
+                </span>
+                <span className="truncate text-xs text-muted-foreground">
+                  {activeTeam.plan}
+                </span>
               </div>
-              <ChevronsUpDown className="ml-auto" />
+             
             </SidebarMenuButton>
           </DropdownMenuTrigger>
-       
         </DropdownMenu>
       </SidebarMenuItem>
     </SidebarMenu>
