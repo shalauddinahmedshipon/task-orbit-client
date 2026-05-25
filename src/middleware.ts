@@ -6,7 +6,7 @@ const PROTECTED_ROUTES = ["/dashboard"];
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  const accessToken = req.cookies.get("access_token")?.value;
+  const accessToken = req.cookies.get("accessToken")?.value;
 
   const isPublicRoute = PUBLIC_ROUTES.some((route) =>
     pathname.startsWith(route)

@@ -1,8 +1,18 @@
+export type UserRole = "admin" | "manager" | "member";
+
 export interface User {
-  id: string;
+  _id: string;
+  name: string;
   email: string;
-  role: "ADMIN" | "CONTENT_MANAGER";
-  fullName?: string | null;
+  role: UserRole;
+
+  avatarUrl?: string;
+  department?: string;
+  skills?: string[];
+
+  status: "in-progress" | "blocked";
+
+  needsPasswordChange?: boolean;
 }
 
 export interface AuthState {

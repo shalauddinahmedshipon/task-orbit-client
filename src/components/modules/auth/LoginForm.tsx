@@ -43,25 +43,22 @@ export default function LoginForm() {
   });
 
   const onSubmit = async (values: LoginInput) => {
-    try {
-      const res = await login(values).unwrap();
+  try {
+    const res = await login(values).unwrap();
 
-      dispatch(
-        setCredentials({
-          user: res.user,
-        })
-      );
+    dispatch(
+      setCredentials({
+        user: res.user,
+      })
+    );
 
-     toast.success("Login successful");
+    toast.success("Login successful");
 
-
-      router.push("/dashboard");
-    } catch (err: any) {
-
-  toast.error(err?.data?.message ?? "Invalid credentials");
-
-    }
-  };
+    router.push("/dashboard");
+  } catch (err: any) {
+    toast.error(err?.data?.message ?? "Invalid credentials");
+  }
+};
 
   return (
     <Card className="w-full max-w-md shadow-xl border-muted">
