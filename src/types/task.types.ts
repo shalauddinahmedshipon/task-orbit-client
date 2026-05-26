@@ -40,3 +40,18 @@ export interface Task {
   createdAt: string;
   updatedAt: string;
 }
+
+
+export interface KanbanColumn {
+  id: TaskStatus;
+  label: string;
+  color: string;
+  dotColor: string;
+}
+ 
+export const KANBAN_COLUMNS: KanbanColumn[] = [
+  { id: "todo",        label: "To Do",       color: "bg-muted/60",               dotColor: "bg-slate-400"  },
+  { id: "in-progress", label: "In Progress", color: "bg-blue-50 dark:bg-blue-950/20",  dotColor: "bg-blue-500"   },
+  { id: "review",      label: "Review",      color: "bg-amber-50 dark:bg-amber-950/20", dotColor: "bg-amber-500"  },
+  { id: "done",        label: "Done",        color: "bg-emerald-50 dark:bg-emerald-950/20", dotColor: "bg-emerald-500" },
+];
