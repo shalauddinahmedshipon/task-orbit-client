@@ -86,17 +86,17 @@ export function ProjectCard({ project, onEdit, onDelete }: Props) {
       </div>
 
       {/* Body */}
-      <CardHeader className="pb-2 pt-4 px-4">
+      <CardHeader className=" px-4">
         <Link
-          href={`/projects/${project._id}`}
+          href={`projects/${project._id}`}
           className="font-semibold text-sm leading-snug hover:underline underline-offset-2 line-clamp-1"
         >
           {project.title}
         </Link>
-        <p className="text-xs text-muted-foreground mt-0.5">{project.client}</p>
+        <p className="text-xs text-muted-foreground ">{project.client}</p>
       </CardHeader>
 
-      <CardContent className="px-4 pb-3 flex-1 space-y-3">
+      <CardContent className="px-4 pb-0 flex-1 space-y-1">
         {/* Progress */}
         <div className="space-y-1.5">
           <div className="flex items-center justify-between text-xs text-muted-foreground">
@@ -110,7 +110,7 @@ export function ProjectCard({ project, onEdit, onDelete }: Props) {
         </div>
 
         {/* Meta */}
-        <div className="grid grid-cols-2 gap-1.5 text-xs text-muted-foreground">
+        <div className="grid grid-cols-2 pt-2 gap-1.5 text-xs text-muted-foreground">
           <span className="flex items-center gap-1 truncate">
             <DollarSign className="h-3 w-3 shrink-0" />
             {formatBudget(project.budget)}
@@ -128,7 +128,7 @@ export function ProjectCard({ project, onEdit, onDelete }: Props) {
       <CardFooter className="px-4 py-3 border-t flex items-center justify-between">
         <MemberAvatars members={project.members} max={4} />
         <Link
-          href={`/projects/${project._id}`}
+          href={`projects/${project._id}`}
           className="text-xs font-medium text-primary hover:underline"
         >
           Open →
