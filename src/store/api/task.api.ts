@@ -9,6 +9,12 @@ interface GetTasksParams {
   priority?: string;
 }
 
+type TaskProgressUpdate = {
+  id: string;
+  status?: TaskStatus;
+  subtasks?: { _id: string; isComplete: boolean }[];
+};
+
 export const taskApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getAllTasks: builder.query<Task[], GetTasksParams>({
@@ -66,11 +72,11 @@ export const taskApi = baseApi.injectEndpoints({
       ],
     }),
 
-    updateTaskStatus: builder.mutation<Task, { id: string; status: TaskStatus }>({
-      query: ({ id, status }) => ({
+    updateTaskStatus: builder.mutation<Task,TaskProgressUpdate>({
+      query: ({ id, status,subtasks }) => ({
         url: `/tasks/${id}/status`,
         method: "PATCH",
-        body: { status },
+        body: { status,subtasks },
       }),
       transformResponse: (res: any) => res.data,
       invalidatesTags: (_r, _e, { id }) => [
@@ -138,3 +144,4 @@ export const {
   useDeleteAttachmentMutation,
   useDeleteTaskMutation,
 } = taskApi;
+

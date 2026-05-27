@@ -41,6 +41,22 @@ export function TaskSidebar({ task, timeLogs, userRole, currentUserId, totalLogg
   const [updateStatus]     = useUpdateTaskStatusMutation();
   const [approveTask, { isLoading: approving }] = useApproveTaskMutation();
 
+const memberStatusOptions: Record<TaskStatus, TaskStatus[]> = {
+  todo: ["in-progress"],
+
+  // if approval required → go to review
+  // otherwise → directly done
+  "in-progress": task.reviewApproval
+    ? ["review"]
+    : ["done"],
+
+  review: task.reviewApproval
+    ? []
+    : ["done"],
+
+  done: [],
+};
+
   const logPct = task.estimatedHours
     ? Math.min(100, Math.round((totalLogged / task.estimatedHours) * 100))
     : 0;
@@ -85,15 +101,41 @@ export function TaskSidebar({ task, timeLogs, userRole, currentUserId, totalLogg
             <SelectTrigger className="h-8 text-sm mt-1">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent>
+            {/* <SelectContent>
               <SelectItem value="todo">To Do</SelectItem>
               <SelectItem value="in-progress">In Progress</SelectItem>
               <SelectItem value="review">Review</SelectItem>
-              {/* members can't pick done directly when reviewApproval is true */}
+             
               {(canManage || !task.reviewApproval) && (
                 <SelectItem value="done">Done</SelectItem>
               )}
-            </SelectContent>
+            </SelectContent> */}
+         <SelectContent>
+  {canManage ? (
+    <>
+      <SelectItem value="todo">To Do</SelectItem>
+      <SelectItem value="in-progress">In Progress</SelectItem>
+      <SelectItem value="review">Review</SelectItem>
+
+      {/* admin/manager always see done */}
+      <SelectItem value="done">Done</SelectItem>
+    </>
+  ) : (
+    <>
+      {/* current status */}
+      <SelectItem value={task.status}>
+        {statusLabel[task.status]}
+      </SelectItem>
+
+      {/* allowed next statuses */}
+      {memberStatusOptions[task.status].map((status) => (
+        <SelectItem key={status} value={status}>
+          {statusLabel[status]}
+        </SelectItem>
+      ))}
+    </>
+  )}
+</SelectContent>
           </Select>
         ) : (
           <span className={cn("inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium w-fit mt-1", statusVariant[task.status])}>

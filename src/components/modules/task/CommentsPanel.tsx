@@ -19,8 +19,8 @@ import { cn } from "@/lib/utils";
 
 interface CommentsPanelProps {
   taskId: string;
-  currentUserId: string;
-  canManage: boolean;
+  currentUserId?: string;
+  canManage?: boolean;
 }
 
 export function CommentsPanel({ taskId, currentUserId, canManage }: CommentsPanelProps) {

@@ -42,8 +42,8 @@ type LogOutput = z.output<typeof logSchema>;
 
 interface TimeLogPanelProps {
   taskId: string;
-  currentUserId: string;
-  canManage: boolean;
+  currentUserId?: string;
+  canManage?: boolean;
 }
 
 export function TimeLogPanel({ taskId, currentUserId, canManage }: TimeLogPanelProps) {

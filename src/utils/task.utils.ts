@@ -9,6 +9,15 @@ export const statusLabel: Record<TaskStatus, string> = {
   "done":        "Done",
 };
 
+// utils/task.utils.ts
+
+export const allowedTransitions: Record<TaskStatus, TaskStatus[]> = {
+  todo: ["in-progress"],
+  "in-progress": ["review"],
+  review: ["done"],
+  done: [],
+};
+
 export const statusVariant: Record<TaskStatus, string> = {
   "todo":        "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300",
   "in-progress": "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300",

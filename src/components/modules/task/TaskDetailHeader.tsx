@@ -7,7 +7,6 @@ import {
   Pencil, Trash2, ArrowLeft,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem,
@@ -24,8 +23,8 @@ import { cn } from "@/lib/utils";
 interface TaskDetailHeaderProps {
   task: Task;
   canManage: boolean;
-  onEdit: () => void;
-  onDelete: () => void;
+  onEdit?: () => void;
+  onDelete?: () => void;
 }
 
 
@@ -39,7 +38,7 @@ export function TaskDetailHeader({ task, canManage, onEdit, onDelete }: TaskDeta
 
   return (
     <div className="space-y-3">
-      {/* breadcrumb */}
+  
      {/* breadcrumb */}
 <div className="flex items-center gap-2">
   <Button
@@ -54,7 +53,7 @@ export function TaskDetailHeader({ task, canManage, onEdit, onDelete }: TaskDeta
   <Breadcrumb>
     <BreadcrumbList>
       <BreadcrumbItem>
-        <BreadcrumbLink href="/dashboard/admin/projects">
+        <BreadcrumbLink href={`/dashboard/${canManage?'admin':'member'}/projects`}>
           Projects
         </BreadcrumbLink>
       </BreadcrumbItem>
@@ -64,7 +63,7 @@ export function TaskDetailHeader({ task, canManage, onEdit, onDelete }: TaskDeta
       {/* project */}
       <BreadcrumbItem>
         <BreadcrumbLink
-          href={`/dashboard/admin/projects/${task.projectId._id}`}
+          href={`/dashboard/${canManage?'admin':'member'}/projects/${task.projectId._id}`}
           className="max-w-[140px] truncate"
         >
           {task.projectId.title}
@@ -76,7 +75,7 @@ export function TaskDetailHeader({ task, canManage, onEdit, onDelete }: TaskDeta
       {/* sprint */}
       <BreadcrumbItem>
         <BreadcrumbLink
-          href={`/dashboard/admin/projects/${task.projectId._id}/sprint/${task.sprintId._id}`}
+          href={`/dashboard/${canManage?'admin':'member'}/projects/${task.projectId._id}/sprint/${task.sprintId._id}`}
           className="max-w-[120px] truncate"
         >
           {task.sprintId.title}
