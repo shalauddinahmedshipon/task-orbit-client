@@ -46,24 +46,22 @@ const allMembers = project?.members ?? [];
   const totalLogged = timeLogs.reduce((acc, l) => acc + l.hours, 0);
 
   // ── loading ───────────────────────────────────────────────────────────────
-  if (isLoading) {
-    return (
-      <div className="p-4 sm:p-6 space-y-4 max-w-[1400px] mx-auto">
-        <Skeleton className="h-5 w-72" />
-        <Skeleton className="h-8 w-96" />
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-5">
-          <div className="space-y-4">
-            <Skeleton className="h-36 rounded-xl" />
-            <Skeleton className="h-28 rounded-xl" />
-            <Skeleton className="h-56 rounded-xl" />
-          </div>
-          <div className="space-y-4">
-            <Skeleton className="h-80 rounded-xl" />
-          </div>
+ if (isLoading) {
+  return (
+    <div className="min-h-[70vh] flex items-center justify-center">
+      <div className="flex flex-col items-center gap-4">
+        <div className="relative h-12 w-12">
+          <div className="absolute inset-0 animate-spin rounded-full border-2 border-muted border-t-primary" />
+          <div className="absolute inset-2 rounded-full bg-background" />
         </div>
+
+        <p className="text-sm font-medium text-muted-foreground">
+          Loading task details...
+        </p>
       </div>
-    );
-  }
+    </div>
+  );
+}
 
   if (isError || !task) {
     return (

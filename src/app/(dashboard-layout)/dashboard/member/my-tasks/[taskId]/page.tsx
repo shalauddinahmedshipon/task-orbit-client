@@ -24,14 +24,21 @@ export default function MemberTaskDetailPage() {
   const canManage = false;
 
   if (isLoading) {
-    return (
-      <div className="p-24 space-y-4 max-w-7xl mx-auto">
-        <Skeleton className="h-10 w-full" />
-        <Skeleton className="h-40 w-full" />
-        <Skeleton className="h-60 w-full" />
+  return (
+    <div className="min-h-[70vh] flex items-center justify-center">
+      <div className="flex flex-col items-center gap-4">
+        <div className="relative h-12 w-12">
+          <div className="absolute inset-0 animate-spin rounded-full border-2 border-muted border-t-primary" />
+          <div className="absolute inset-2 rounded-full bg-background" />
+        </div>
+
+        <p className="text-sm font-medium text-muted-foreground">
+          Loading task details...
+        </p>
       </div>
-    );
-  }
+    </div>
+  );
+}
 
   if (!task) {
     return (
