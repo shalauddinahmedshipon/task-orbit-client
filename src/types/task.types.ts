@@ -1,3 +1,5 @@
+import { UserRole } from "./auth.types";
+
 export type TaskStatus = "todo" | "in-progress" | "review" | "done";
 export type PriorityStatus = "low" | "medium" | "high";
 
@@ -19,6 +21,7 @@ export interface TaskAssignee {
   _id: string;
   name: string;
   email: string;
+  role:UserRole;
   avatarUrl?: string;
 }
 
@@ -26,8 +29,19 @@ export interface Task {
   _id: string;
   title: string;
   description: string;
-  sprintId: string;
-  projectId: string;
+  projectId: {
+    _id: string;
+    title: string;
+    client?: string;
+  };
+  sprintId: {
+    _id: string;
+    title: string;
+    sprintNumber?: number;
+    startDate?: Date;
+    endDate?: Date;
+  };
+
   assignees: TaskAssignee[];
   estimatedHours: number;
   status: TaskStatus;
@@ -36,7 +50,7 @@ export interface Task {
   priority: PriorityStatus;
   reviewApproval: boolean;
   dueDate: string;
-  createdBy: string | TaskAssignee;
+  createdBy: TaskAssignee;
   createdAt: string;
   updatedAt: string;
 }
@@ -54,10 +68,9 @@ export interface CreateTaskPayload {
   reviewApproval?: boolean;
   dueDate: string;
 }
-
-export interface UpdateTaskPayload
-  extends Partial<CreateTaskPayload> {}
-
+export interface UpdateTaskPayload extends Partial<CreateTaskPayload> {
+  subtasks?: Subtask[];  
+}
 
 export interface KanbanColumn {
   id: TaskStatus;

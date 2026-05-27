@@ -44,6 +44,8 @@ export function ProjectDetailHeader({
 
   return (
     <div className="rounded-xl border bg-card overflow-hidden">
+
+      
       {/* Thumbnail / colour band */}
       <div className="relative h-36 sm:h-44 bg-gradient-to-br from-muted/80 to-muted">
         {project.thumbnail && (
@@ -56,20 +58,7 @@ export function ProjectDetailHeader({
         {/* Gradient overlay so text is readable */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
 
-        {/* Back link */}
-        <div className="absolute top-3 left-3">
-          <Button
-            variant="secondary"
-            size="sm"
-            className="h-7 gap-1 text-xs"
-            asChild
-          >
-            <Link href="/dashboard/admin/projects">
-              <ChevronLeft className="h-3.5 w-3.5" />
-              Projects
-            </Link>
-          </Button>
-        </div>
+      
 
         {/* Actions — top right */}
         {canManage && (

@@ -34,6 +34,7 @@ import { Switch } from "@/components/ui/switch";
 import { useCreateTaskMutation, useUpdateTaskMutation } from "@/store/api/task.api";
 import { Task, TaskAssignee } from "@/types/task.types";
 import { TaskFormInput, taskSchema } from "@/lib/validations/task.schema";
+import { ProjectMember } from "@/types/project.types";
 
 // ─── Props ────────────────────────────────────────────────────────────────────
 
@@ -43,7 +44,7 @@ interface TaskFormModalProps {
   task?: Task | null;
   projectId: string;
   sprintId: string;
-  allMembers: TaskAssignee[];
+  allMembers: ProjectMember[];
 }
 
 // ─── Component ───────────────────────────────────────────────────────────────

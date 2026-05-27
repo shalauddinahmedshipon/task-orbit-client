@@ -28,6 +28,7 @@ import { TaskFormModal } from "@/components/modules/task/TaskFormModal";
 import { DeleteTaskDialog } from "@/components/modules/task/DeleteTaskDialog";
 import { SprintFormModal } from "@/components/modules/sprint/SprintFormModal";
 import { useGetProjectQuery } from "@/store/api/project.api";
+import { ProjectMember } from "@/types/project.types";
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
@@ -73,7 +74,7 @@ export default function SprintDetailPage() {
 
   // ── derived data ─────────────────────────────────────────────────────────
   // unique assignees for filter dropdown
-  const allMembers: TaskAssignee[] = project?.members ?? [];
+  const allMembers: ProjectMember[] = project?.members ?? [];
   // const allMembers: TaskAssignee[] = useMemo(() => {
   //   const map = new Map<string, TaskAssignee>();
   //   rawTasks.forEach((t) =>

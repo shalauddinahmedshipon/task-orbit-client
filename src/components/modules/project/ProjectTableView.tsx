@@ -52,7 +52,7 @@ export function ProjectTableView({ projects, onEdit, onDelete }: Props) {
             <TableRow className="bg-muted/40 hover:bg-muted/40">
               <TableHead className="w-[260px]">
                 <button className="flex items-center gap-1 text-xs font-semibold hover:text-foreground">
-                  Project <ArrowUpDown className="h-3 w-3" />
+                  Project 
                 </button>
               </TableHead>
               <TableHead className="hidden sm:table-cell">Client</TableHead>
@@ -91,10 +91,10 @@ export function ProjectTableView({ projects, onEdit, onDelete }: Props) {
                       </div>
                       <div className="min-w-0">
                         <Link
-                          href={`/projects/${project._id}`}
+                          href={`/dashboard/admin/projects/${project._id}`}
                           className="text-sm font-medium hover:underline underline-offset-2 truncate block"
                         >
-                          {project.title}
+                          {project.title.length<15?project.title:`${project.title.slice(0,15)}...`}
                         </Link>
                         {/* Client shown inline on small screens */}
                         <p className="text-xs text-muted-foreground truncate sm:hidden">
@@ -131,7 +131,7 @@ export function ProjectTableView({ projects, onEdit, onDelete }: Props) {
                   </TableCell>
 
                   <TableCell className="hidden md:table-cell">
-                    <MemberAvatars members={project.members} max={3} />
+                    <MemberAvatars members={project.members} max={2} />
                   </TableCell>
 
                   <TableCell>

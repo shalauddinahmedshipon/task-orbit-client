@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/select";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { TaskAssignee } from "@/types/task.types";
+import { ProjectMember } from "@/types/project.types";
 
 export type ViewMode = "list" | "kanban";
 
@@ -28,7 +29,7 @@ interface TaskToolbarProps {
   onFiltersChange: (f: Partial<TaskFilters>) => void;
   viewMode: ViewMode;
   onViewModeChange: (v: ViewMode) => void;
-  assignees: TaskAssignee[];
+  assignees: ProjectMember[];
   canManage: boolean;
   onAddTask: () => void;
 }

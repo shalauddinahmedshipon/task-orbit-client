@@ -15,7 +15,14 @@ import { CreateSprintModal } from "@/components/modules/sprint/CreateSprintModal
 import { DeleteSprintDialog } from "@/components/modules/sprint/DeleteSprintDialog";
 import { CreateProjectModal } from "@/components/modules/project/CreateProjectModal";
 import { DeleteProjectDialog } from "@/components/modules/project/DeleteProjectDialog";
-
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 
 export default function ProjectDetailPage() {
   const { projectId } = useParams<{ projectId: string }>();
@@ -87,6 +94,31 @@ console.log(project,sprints);
 
   return (
     <div className="flex flex-col gap-6 p-4 sm:p-6">
+      
+      <Breadcrumb>
+  <BreadcrumbList>
+    <BreadcrumbItem>
+      <BreadcrumbLink href="/dashboard/admin">
+        Dashboard
+      </BreadcrumbLink>
+    </BreadcrumbItem>
+
+    <BreadcrumbSeparator />
+
+    <BreadcrumbItem>
+      <BreadcrumbLink href="/dashboard/admin/projects">
+        Projects
+      </BreadcrumbLink>
+    </BreadcrumbItem>
+
+    <BreadcrumbSeparator />
+
+    <BreadcrumbItem>
+      <BreadcrumbPage>{project.title}</BreadcrumbPage>
+    </BreadcrumbItem>
+  </BreadcrumbList>
+</Breadcrumb>
+
       {/* ── Project header banner ─────────────────────────────────────────── */}
       <ProjectDetailHeader
         project={project}

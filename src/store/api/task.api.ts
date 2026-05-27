@@ -12,7 +12,21 @@ interface GetTasksParams {
 export const taskApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getAllTasks: builder.query<Task[], GetTasksParams>({
-      query: (params) => ({ url: "/tasks", params }),
+     query: (params) => {
+    const cleanedParams = Object.fromEntries(
+      Object.entries(params).filter(
+        ([_, value]) =>
+          value !== undefined &&
+          value !== "" &&
+          value !== "all"
+      )
+    );
+
+    return {
+      url: "/tasks",
+      params: cleanedParams,
+    };
+  },
       transformResponse: (res: any) => res.data,
       providesTags: (result) =>
         result
@@ -40,7 +54,11 @@ export const taskApi = baseApi.injectEndpoints({
     }),
 
     updateTask: builder.mutation<Task, { id: string; data: UpdateTaskPayload }>({
-      query: ({ id, data }) => ({ url: `/tasks/${id}`, method: "PATCH", body: data }),
+      query: ({ id, data }) => ({
+        url: `/tasks/${id}`,
+        method: "PATCH",
+        body: data,
+      }),
       transformResponse: (res: any) => res.data,
       invalidatesTags: (_r, _e, { id }) => [
         { type: "Task", id },
@@ -74,6 +92,34 @@ export const taskApi = baseApi.injectEndpoints({
       ],
     }),
 
+    // POST /tasks/:taskId/attachments  — multipart/form-data
+    addAttachment: builder.mutation<Task, { taskId: string; file: File }>({
+      query: ({ taskId, file }) => {
+        const form = new FormData();
+        form.append("file", file);
+        return {
+          url: `/tasks/${taskId}/attachments`,
+          method: "POST",
+          body: form,
+          // Do NOT set Content-Type — browser sets it with the correct boundary
+          formData: true,
+        };
+      },
+      transformResponse: (res: any) => res.data,
+      invalidatesTags: (_r, _e, { taskId }) => [{ type: "Task", id: taskId }],
+    }),
+
+    // DELETE /tasks/:taskId/attachments  — sends publicId in body
+    deleteAttachment: builder.mutation<Task, { taskId: string; publicId: string }>({
+      query: ({ taskId, publicId }) => ({
+        url: `/tasks/${taskId}/attachments`,
+        method: "DELETE",
+        body: { publicId },
+      }),
+      transformResponse: (res: any) => res.data,
+      invalidatesTags: (_r, _e, { taskId }) => [{ type: "Task", id: taskId }],
+    }),
+
     deleteTask: builder.mutation<void, string>({
       query: (id) => ({ url: `/tasks/${id}`, method: "DELETE" }),
       invalidatesTags: [{ type: "Task", id: "LIST" }],
@@ -88,5 +134,7 @@ export const {
   useUpdateTaskMutation,
   useUpdateTaskStatusMutation,
   useApproveTaskMutation,
+  useAddAttachmentMutation,
+  useDeleteAttachmentMutation,
   useDeleteTaskMutation,
 } = taskApi;

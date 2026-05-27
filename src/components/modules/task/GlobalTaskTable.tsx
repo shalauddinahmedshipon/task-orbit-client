@@ -1,65 +1,41 @@
-// components/sprint-detail/TaskTable.tsx
+// components/global-tasks/GlobalTaskTable.tsx
 "use client";
 
 import { useRouter } from "next/navigation";
+import { AlertTriangle, ExternalLink, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
 import {
-  AlertTriangle,
-  MoreHorizontal,
-  Pencil,
-  Trash2,
-  ExternalLink,
-  Plus,
-} from "lucide-react";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
+  Table, TableBody, TableCell, TableHead,
+  TableHeader, TableRow,
 } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
+import { Button } from "@/components/ui/button";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
+  DropdownMenu, DropdownMenuContent, DropdownMenuItem,
+  DropdownMenuSeparator, DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-
+import type { Task } from "@/types/task.types";
+import {
+  statusLabel, statusVariant, priorityVariant,
+  priorityDot, isOverdue, formatDate, subtaskProgress,
+} from "@/utils/task.utils";
 import { cn } from "@/lib/utils";
-import { Task } from "@/types/task.types";
-import { formatDate, isOverdue, priorityDot, priorityVariant, statusLabel, statusVariant, subtaskProgress } from "@/utils/task.utils";
 import { AssigneeStack } from "../sprint/AssigneeStack";
 
-interface TaskTableProps {
+interface GlobalTaskTableProps {
   tasks: Task[];
   canManage: boolean;
-  onEdit: (task: Task) => void;
+  onEdit:   (task: Task) => void;
   onDelete: (task: Task) => void;
-  onAddTask: () => void;
 }
 
-export function TaskTable({
-  tasks,
-  canManage,
-  onEdit,
-  onDelete,
-  onAddTask,
-}: TaskTableProps) {
+export function GlobalTaskTable({ tasks, canManage, onEdit, onDelete }: GlobalTaskTableProps) {
   const router = useRouter();
 
   if (tasks.length === 0) {
     return (
-      <div className="rounded-xl border border-dashed bg-muted/30 py-16 flex flex-col items-center gap-3 text-center">
+      <div className="rounded-xl border border-dashed bg-muted/30 py-16 text-center">
         <p className="text-sm text-muted-foreground">No tasks match your filters.</p>
-        {canManage && (
-          <Button size="sm" variant="outline" onClick={onAddTask}>
-            <Plus className="h-3.5 w-3.5 mr-1.5" /> Add first task
-          </Button>
-        )}
       </div>
     );
   }
@@ -70,25 +46,23 @@ export function TaskTable({
         <Table>
           <TableHeader>
             <TableRow className="bg-muted/40 hover:bg-muted/40">
-              <TableHead className="w-8">
-                <input type="checkbox" className="rounded border-muted" />
-              </TableHead>
-              <TableHead className="min-w-[200px]">Task</TableHead>
+              <TableHead className="min-w-[220px]">Task</TableHead>
+              <TableHead className="min-w-[130px]">Project</TableHead>
               <TableHead className="min-w-[100px]">Assignees</TableHead>
               <TableHead className="w-[90px]">Priority</TableHead>
               <TableHead className="w-[110px]">Status</TableHead>
               <TableHead className="w-[90px]">Subtasks</TableHead>
               <TableHead className="w-[70px]">Est.</TableHead>
               <TableHead className="w-[90px]">Due</TableHead>
-              {canManage && <TableHead className="w-[60px]" />}
+              {canManage && <TableHead className="w-[52px]" />}
             </TableRow>
           </TableHeader>
 
           <TableBody>
             {tasks.map((task) => {
-              const overdue  = isOverdue(task.dueDate, task.status);
-              const subPct   = subtaskProgress(task.subtasks);
-              const isDone   = task.status === "done";
+              const overdue = isOverdue(task.dueDate, task.status);
+              const subPct  = subtaskProgress(task.subtasks);
+              const isDone  = task.status === "done";
 
               return (
                 <TableRow
@@ -96,24 +70,29 @@ export function TaskTable({
                   className={cn("cursor-pointer group", isDone && "opacity-60")}
                   onClick={() => router.push(`/dashboard/admin/tasks/${task._id}`)}
                 >
-                  {/* checkbox */}
-                  <TableCell onClick={(e) => e.stopPropagation()}>
-                    <input type="checkbox" checked={isDone} readOnly className="rounded border-muted" />
-                  </TableCell>
-
                   {/* title */}
                   <TableCell>
                     <div className="flex items-center gap-2">
                       <span className={cn("h-2 w-2 rounded-full shrink-0", priorityDot[task.priority])} />
                       <span className={cn("text-sm font-medium line-clamp-1", isDone && "line-through text-muted-foreground")}>
-                        {task.title}
+                        {task.title.length<20?task.title:`${task.title.slice(0,20)}...`}
                       </span>
                     </div>
                   </TableCell>
 
+                  {/* project name — task.projectId is a string ID so we show it truncated */}
+                  <TableCell>
+                    <span className="text-xs text-muted-foreground truncate max-w-[120px] inline-block">
+                      {/* Ideally pass project title map; fallback to ID */}
+                      {typeof task.projectId === "object"
+                        ? (task.projectId as any).title
+                        : "—"}
+                    </span>
+                  </TableCell>
+
                   {/* assignees */}
                   <TableCell>
-                    <AssigneeStack assignees={task.assignees} max={3} />
+                    <AssigneeStack assignees={task.assignees} max={2} />
                   </TableCell>
 
                   {/* priority */}
@@ -144,14 +123,16 @@ export function TaskTable({
                     )}
                   </TableCell>
 
-                  {/* estimated hours */}
+                  {/* est. hours */}
                   <TableCell>
                     <span className="text-xs text-muted-foreground">{task.estimatedHours}h</span>
                   </TableCell>
 
                   {/* due date */}
                   <TableCell>
-                    <span className={cn("flex items-center gap-1 text-xs whitespace-nowrap", overdue ? "text-red-500 font-medium" : "text-muted-foreground")}>
+                    <span className={cn("flex items-center gap-1 text-xs whitespace-nowrap",
+                      overdue ? "text-red-500 font-medium" : "text-muted-foreground"
+                    )}>
                       {overdue && <AlertTriangle className="h-3 w-3" />}
                       {formatDate(task.dueDate)}
                     </span>
@@ -162,28 +143,19 @@ export function TaskTable({
                     <TableCell onClick={(e) => e.stopPropagation()}>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-7 w-7 opacity-0 group-hover:opacity-100"
-                          >
+                          <Button variant="ghost" size="icon" className="h-7 w-7 opacity-0 group-hover:opacity-100">
                             <MoreHorizontal className="h-3.5 w-3.5" />
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                          <DropdownMenuItem
-                            onClick={() => router.push(`/dashboard/admin/tasks/${task._id}`)}
-                          >
-                            <ExternalLink className="mr-2 h-3.5 w-3.5" /> View details
+                          <DropdownMenuItem onClick={() => router.push(`/dashboard/admin/tasks/${task._id}`)}>
+                            <ExternalLink className="mr-2 h-3.5 w-3.5" /> View
                           </DropdownMenuItem>
                           <DropdownMenuItem onClick={() => onEdit(task)}>
                             <Pencil className="mr-2 h-3.5 w-3.5" /> Edit
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
-                          <DropdownMenuItem
-                            onClick={() => onDelete(task)}
-                            className="text-red-600 focus:text-red-600"
-                          >
+                          <DropdownMenuItem onClick={() => onDelete(task)} className="text-red-600 focus:text-red-600">
                             <Trash2 className="mr-2 h-3.5 w-3.5" /> Delete
                           </DropdownMenuItem>
                         </DropdownMenuContent>
@@ -196,16 +168,6 @@ export function TaskTable({
           </TableBody>
         </Table>
       </div>
-
-      {/* add task inline row */}
-      {canManage && (
-        <button
-          onClick={onAddTask}
-          className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-muted-foreground border-t hover:bg-muted/40 transition-colors"
-        >
-          <Plus className="h-4 w-4" /> Add task to this sprint…
-        </button>
-      )}
     </div>
   );
 }

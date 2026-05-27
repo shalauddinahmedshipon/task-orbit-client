@@ -15,6 +15,8 @@ export const baseApi = createApi({
     "User",
     "Auth",
     "TimeLog",
+     "ActivityLog",
+     "Comment"
   ],
 
   endpoints: () => ({}),
