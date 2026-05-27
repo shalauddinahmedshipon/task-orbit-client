@@ -26,11 +26,12 @@ interface GlobalTaskFiltersProps {
   projects: Project[];
   members: TaskAssignee[];
   hasActiveFilters: boolean;
+  showAssignee?: boolean; 
 }
 
 export function GlobalTaskFiltersBar({
   filters, onChange, onClear,
-  projects, members, hasActiveFilters,
+  projects, members, hasActiveFilters,showAssignee=true
 }: GlobalTaskFiltersProps) {
   return (
     <div className="flex flex-wrap items-center gap-2">
@@ -86,17 +87,22 @@ export function GlobalTaskFiltersBar({
       </Select>
 
       {/* assignee */}
-      <Select value={filters.assignee} onValueChange={(v) => onChange({ assignee: v })}>
-        <SelectTrigger className="h-9 w-[140px] text-sm">
-          <SelectValue placeholder="All assignees" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="all">All assignees</SelectItem>
-          {members.map((m) => (
-            <SelectItem key={m._id} value={m._id}>{m.name}</SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+    {showAssignee !== false && (
+  <Select value={filters.assignee} onValueChange={(v) => onChange({ assignee: v })}>
+    <SelectTrigger className="h-9 w-[140px] text-sm">
+      <SelectValue placeholder="All assignees" />
+    </SelectTrigger>
+
+    <SelectContent>
+      <SelectItem value="all">All assignees</SelectItem>
+      {members.map((m) => (
+        <SelectItem key={m._id} value={m._id}>
+          {m.name}
+        </SelectItem>
+      ))}
+    </SelectContent>
+  </Select>
+)}
 
       {/* clear */}
       {hasActiveFilters && (

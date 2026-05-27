@@ -6,7 +6,7 @@ import { ClipboardList } from "lucide-react";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Skeleton } from "@/components/ui/skeleton";
 
-// components
+
 
 // RTK
 import { useGetAllTasksQuery } from "@/store/api/task.api";
@@ -141,8 +141,8 @@ export default function GlobalTasksPage() {
           open={!!editTask}
           onClose={() => setEditTask(null)}
           task={editTask}
-          projectId={editTask.projectId}
-          sprintId={editTask.sprintId}
+          projectId={editTask.projectId._id}
+          sprintId={editTask.sprintId._id}
           allMembers={editTask.assignees}
         />
       )}
