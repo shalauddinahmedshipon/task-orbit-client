@@ -147,9 +147,7 @@ export function SprintCard({
             </DropdownMenu>
           ) : (
             <Button variant="ghost" size="sm" className="h-7 gap-1 text-xs" asChild>
-              <Link href={`/dashboard/admin/projects/${projectId}/sprint/${sprint._id}`}>
-                Open <ArrowRight className="h-3 w-3" />
-              </Link>
+              
             </Button>
           )}
         </div>
@@ -203,7 +201,7 @@ export function SprintCard({
           </div>
 
           <Button size="sm" variant="outline" className="h-7 gap-1 text-xs shrink-0" asChild>
-            <Link href={`/dashboard/admin/projects/${projectId}/sprint/${sprint._id}`}>
+            <Link href={`${projectId}/sprint/${sprint._id}`}>
               Open Board <ArrowRight className="h-3 w-3" />
             </Link>
           </Button>
