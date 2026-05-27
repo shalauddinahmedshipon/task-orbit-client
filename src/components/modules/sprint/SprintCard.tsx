@@ -132,7 +132,7 @@ export function SprintCard({
                   <Pencil className="h-3.5 w-3.5" /> Edit sprint
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild className="gap-2">
-                  <Link href={`/projects/${projectId}/sprints/${sprint._id}`}>
+                  <Link href={`/dashboard/admin/projects/${projectId}/sprint/${sprint._id}`}>
                     <ArrowRight className="h-3.5 w-3.5" /> Open sprint board
                   </Link>
                 </DropdownMenuItem>
@@ -147,7 +147,7 @@ export function SprintCard({
             </DropdownMenu>
           ) : (
             <Button variant="ghost" size="sm" className="h-7 gap-1 text-xs" asChild>
-              <Link href={`/projects/${projectId}/sprints/${sprint._id}`}>
+              <Link href={`/dashboard/admin/projects/${projectId}/sprint/${sprint._id}`}>
                 Open <ArrowRight className="h-3 w-3" />
               </Link>
             </Button>
@@ -203,7 +203,7 @@ export function SprintCard({
           </div>
 
           <Button size="sm" variant="outline" className="h-7 gap-1 text-xs shrink-0" asChild>
-            <Link href={`/projects/${projectId}/sprints/${sprint._id}`}>
+            <Link href={`/dashboard/admin/projects/${projectId}/sprint/${sprint._id}`}>
               Open Board <ArrowRight className="h-3 w-3" />
             </Link>
           </Button>

@@ -1,5 +1,4 @@
-// store/api/task.api.ts
-import { Task, TaskStatus } from "@/types/task.types";
+import { CreateTaskPayload, Task, TaskStatus, UpdateTaskPayload } from "@/types/task.types";
 import { baseApi } from "./baseApi";
 
 interface GetTasksParams {
@@ -30,7 +29,7 @@ export const taskApi = baseApi.injectEndpoints({
       providesTags: (_r, _e, id) => [{ type: "Task", id }],
     }),
 
-    createTask: builder.mutation<Task, { projectId: string; data: Partial<Task> }>({
+    createTask: builder.mutation<Task, { projectId: string; data: CreateTaskPayload }>({
       query: ({ projectId, data }) => ({
         url: `/tasks/project/${projectId}`,
         method: "POST",
@@ -40,7 +39,7 @@ export const taskApi = baseApi.injectEndpoints({
       invalidatesTags: [{ type: "Task", id: "LIST" }],
     }),
 
-    updateTask: builder.mutation<Task, { id: string; data: Partial<Task> }>({
+    updateTask: builder.mutation<Task, { id: string; data: UpdateTaskPayload }>({
       query: ({ id, data }) => ({ url: `/tasks/${id}`, method: "PATCH", body: data }),
       transformResponse: (res: any) => res.data,
       invalidatesTags: (_r, _e, { id }) => [
@@ -49,7 +48,6 @@ export const taskApi = baseApi.injectEndpoints({
       ],
     }),
 
-    // Member-only status update
     updateTaskStatus: builder.mutation<Task, { id: string; status: TaskStatus }>({
       query: ({ id, status }) => ({
         url: `/tasks/${id}/status`,
@@ -63,7 +61,6 @@ export const taskApi = baseApi.injectEndpoints({
       ],
     }),
 
-    // Admin/Manager approval
     approveTask: builder.mutation<Task, { id: string; approved: boolean }>({
       query: ({ id, approved }) => ({
         url: `/tasks/${id}/approve`,

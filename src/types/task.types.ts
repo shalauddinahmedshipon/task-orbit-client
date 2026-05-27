@@ -42,6 +42,23 @@ export interface Task {
 }
 
 
+export interface CreateTaskPayload {
+  title: string;
+  description?: string;
+  sprintId: string;
+  projectId?: string;
+  assignees?: string[];
+  estimatedHours?: number;
+  status: TaskStatus;
+  priority: PriorityStatus;
+  reviewApproval?: boolean;
+  dueDate: string;
+}
+
+export interface UpdateTaskPayload
+  extends Partial<CreateTaskPayload> {}
+
+
 export interface KanbanColumn {
   id: TaskStatus;
   label: string;
