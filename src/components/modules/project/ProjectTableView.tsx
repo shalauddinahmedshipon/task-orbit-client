@@ -27,8 +27,8 @@ import { MemberAvatars } from "./MemberAvatars";
 
 interface Props {
   projects: Project[];
-  onEdit: (project: Project) => void;
-  onDelete: (project: Project) => void;
+  onEdit?: (project: Project) => void;
+  onDelete?: (project: Project) => void;
 }
 
 export function ProjectTableView({ projects, onEdit, onDelete }: Props) {
@@ -91,7 +91,7 @@ export function ProjectTableView({ projects, onEdit, onDelete }: Props) {
                       </div>
                       <div className="min-w-0">
                         <Link
-                          href={`/dashboard/admin/projects/${project._id}`}
+                          href={`projects/${project._id}`}
                           className="text-sm font-medium hover:underline underline-offset-2 truncate block"
                         >
                           {project.title.length<15?project.title:`${project.title.slice(0,15)}...`}
@@ -133,7 +133,8 @@ export function ProjectTableView({ projects, onEdit, onDelete }: Props) {
                   <TableCell className="hidden md:table-cell">
                     <MemberAvatars members={project.members} max={2} />
                   </TableCell>
-
+                    {
+            onEdit&&onDelete&&(
                   <TableCell>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
@@ -165,6 +166,7 @@ export function ProjectTableView({ projects, onEdit, onDelete }: Props) {
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </TableCell>
+            )}
                 </TableRow>
               );
             })}

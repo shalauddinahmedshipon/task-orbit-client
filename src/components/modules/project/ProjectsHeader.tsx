@@ -8,7 +8,7 @@ import { ProjectViewToggle, ViewMode } from "./ProjectViewToggle";
 interface Props {
   view: ViewMode;
   onViewChange: (v: ViewMode) => void;
-  onCreateClick: () => void;
+  onCreateClick?: () => void;
   canCreate: boolean;
 }
 

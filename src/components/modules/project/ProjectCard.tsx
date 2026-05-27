@@ -24,8 +24,8 @@ import { MemberAvatars } from "./MemberAvatars";
 
 interface Props {
   project: Project;
-  onEdit: (project: Project) => void;
-  onDelete: (project: Project) => void;
+  onEdit?: (project: Project) => void;
+  onDelete?: (project: Project) => void;
 }
 
 export function ProjectCard({ project, onEdit, onDelete }: Props) {
@@ -57,6 +57,8 @@ export function ProjectCard({ project, onEdit, onDelete }: Props) {
         </div>
 
         {/* Actions menu — top left, shown on hover */}
+         {
+            onEdit&&onDelete&&(
         <div className="absolute top-2 left-2 opacity-0 group-hover:opacity-100 transition-opacity">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -69,7 +71,8 @@ export function ProjectCard({ project, onEdit, onDelete }: Props) {
                 <MoreHorizontal className="h-3.5 w-3.5" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="start">
+          
+                <DropdownMenuContent align="start">
               <DropdownMenuItem onClick={() => onEdit(project)}>
                 Edit project
               </DropdownMenuItem>
@@ -81,9 +84,14 @@ export function ProjectCard({ project, onEdit, onDelete }: Props) {
                 Delete project
               </DropdownMenuItem>
             </DropdownMenuContent>
+         
           </DropdownMenu>
         </div>
+
+         )}
       </div>
+
+           
 
       {/* Body */}
       <CardHeader className=" px-4">

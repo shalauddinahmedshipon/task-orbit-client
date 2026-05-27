@@ -4,8 +4,8 @@ import type { Project } from "@/types/project.types";
 
 interface Props {
   projects: Project[];
-  onEdit: (project: Project) => void;
-  onDelete: (project: Project) => void;
+  onEdit?: (project: Project) => void;
+  onDelete?: (project: Project) => void;
 }
 
 export function ProjectGridView({ projects, onEdit, onDelete }: Props) {
