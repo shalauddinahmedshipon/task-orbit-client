@@ -53,13 +53,20 @@ export default function LoginForm() {
         })
       );
 
+console.log("LOGIN RESPONSE:", res);
+console.log("ROLE:", res?.user?.role);
+
       toast.success("Login successful");
 
-      if (res.user.role == "member") {
-        router.push("/dashboard/member");
-      } else {
-        router.push("/dashboard/admin");
-      }
+    setTimeout(() => {
+  if (res.user.role === "member") {
+    router.push("/dashboard/member");
+    // window.location.href = "/dashboard/member";
+  } else {
+    router.push("/dashboard/admin");
+    // window.location.href = "/dashboard/admin";
+  }
+}, 100);
     } catch (err: any) {
       toast.error(err?.data?.message ?? "Invalid credentials");
     }

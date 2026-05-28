@@ -36,9 +36,10 @@ export function middleware(req: NextRequest) {
   // ===============================
   // 1. AUTH CHECK
   // ===============================
-  if (!accessToken && pathname.startsWith("/dashboard")) {
-    return NextResponse.redirect(new URL("/login", req.url));
-  }
+  //it is only for vercel problem
+  // if (!accessToken && pathname.startsWith("/dashboard")) {
+  //   return NextResponse.redirect(new URL("/login", req.url));
+  // }
 
   if (accessToken && !payload && pathname.startsWith("/dashboard")) {
     return NextResponse.redirect(new URL("/login", req.url));
