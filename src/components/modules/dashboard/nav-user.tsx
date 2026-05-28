@@ -52,7 +52,7 @@ export function NavUser({
 
   const handleLogout = async () => {
     try {
-      await logoutApi().unwrap()
+      await logoutApi(undefined).unwrap()
     } catch (err) {
       // even if API fails, force logout on client
       console.error("Logout failed", err)

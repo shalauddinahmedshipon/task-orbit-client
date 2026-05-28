@@ -8,12 +8,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
 // components
-import { UserStats }        from "@/components/users/UserStats";
-import { UserFiltersBar, type UserFilters } from "@/components/users/UserFilters";
-import { UserTable }        from "@/components/users/UserTable";
-import { CreateUserModal }  from "@/components/users/CreateUserModal";
-import { EditUserModal }    from "@/components/users/EditUserModal";
-import { DeleteUserDialog } from "@/components/users/DeleteUserDialog";
 
 // RTK
 import { useGetUsersQuery } from "@/store/api/user.api";
@@ -21,6 +15,12 @@ import { useGetUsersQuery } from "@/store/api/user.api";
 // Redux
 import { useAppSelector } from "@/store/hooks";
 import type { User } from "@/types/auth.types";
+import { UserFilters, UserFiltersBar } from "@/components/modules/user/UserFilters";
+import { UserStats } from "@/components/modules/user/UserStats";
+import { UserTable } from "@/components/modules/user/UserTable";
+import { CreateUserModal } from "@/components/modules/user/CreateUserModal";
+import { EditUserModal } from "@/components/modules/user/EditUserModal";
+import { DeleteUserDialog } from "@/components/modules/user/DeleteUserDialog";
 
 const DEFAULT_FILTERS: UserFilters = {
   search: "", role: "all", department: "all", status: "all",
