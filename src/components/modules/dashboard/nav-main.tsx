@@ -13,13 +13,13 @@ import {
 
 import {
   SidebarGroup,
-  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
+  useSidebar,
 } from "@/components/ui/sidebar"
 
 import { NavItem } from "@/types/navigation.types"
@@ -27,22 +27,29 @@ import { NavItem } from "@/types/navigation.types"
 export function NavMain({ items }: { items: NavItem[] }) {
   const pathname = usePathname()
 
+  // IMPORTANT
+  const { isMobile, setOpenMobile } = useSidebar()
+
+  // close sidebar on mobile
+  const handleMobileClose = () => {
+    if (isMobile) {
+      setOpenMobile(false)
+    }
+  }
+
   return (
     <SidebarGroup>
-      {/* <SidebarGroupLabel>Platform</SidebarGroupLabel> */}
-
       <SidebarMenu>
         {items.map((item) => {
           const hasDropdown = item.items && item.items.length > 1
           const singleChild = item.items && item.items.length === 1
 
-          // resolve final href
           const href =
             item.url ??
             (singleChild ? item.items![0].url : undefined)
 
           /* -------------------------
-             DROPDOWN ( > 1 children )
+             DROPDOWN
           -------------------------- */
           if (hasDropdown) {
             const isAnyChildActive = item.items!.some(
@@ -60,6 +67,7 @@ export function NavMain({ items }: { items: NavItem[] }) {
                     <SidebarMenuButton tooltip={item.title}>
                       {item.icon && <item.icon className="h-4 w-4" />}
                       <span>{item.title}</span>
+
                       <ChevronRight className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-90" />
                     </SidebarMenuButton>
                   </CollapsibleTrigger>
@@ -78,7 +86,12 @@ export function NavMain({ items }: { items: NavItem[] }) {
                                   "bg-sidebar-accent text-sidebar-accent-foreground"
                               )}
                             >
-                              <Link href={sub.url}>{sub.title}</Link>
+                              <Link
+                                href={sub.url}
+                                onClick={handleMobileClose}
+                              >
+                                {sub.title}
+                              </Link>
                             </SidebarMenuSubButton>
                           </SidebarMenuSubItem>
                         )
@@ -91,13 +104,14 @@ export function NavMain({ items }: { items: NavItem[] }) {
           }
 
           /* -------------------------
-             SINGLE LINK (0 or 1 child)
+             SINGLE LINK
           -------------------------- */
-         const isActive =
-   pathname === href ||
-  (href !== "/dashboard/admin" &&
-    href !== "/dashboard/member" &&
-    pathname.startsWith(`${href}/`))
+          const isActive =
+            pathname === href ||
+            (href !== "/dashboard/admin" &&
+              href !== "/dashboard/member" &&
+              pathname.startsWith(`${href}/`))
+
           return (
             <SidebarMenuItem key={item.title}>
               <SidebarMenuButton
@@ -108,7 +122,11 @@ export function NavMain({ items }: { items: NavItem[] }) {
                     "bg-sidebar-accent text-sidebar-accent-foreground"
                 )}
               >
-                <Link href={href!} className="flex items-center gap-2">
+                <Link
+                  href={href!}
+                  onClick={handleMobileClose}
+                  className="flex items-center gap-2"
+                >
                   {item.icon && <item.icon className="h-4 w-4" />}
                   <span>
                     {singleChild ? item.items![0].title : item.title}

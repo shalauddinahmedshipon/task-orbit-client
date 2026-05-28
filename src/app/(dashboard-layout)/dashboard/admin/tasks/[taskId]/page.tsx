@@ -87,7 +87,7 @@ const allMembers = project?.members ?? [];
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] xl:grid-cols-[1fr_320px] gap-5 items-start">
 
           {/* ── left column ──────────────────────────────────────────────── */}
-          <div className="space-y-5 min-w-0">
+          <div className="space-y-5 min-w-0 lg:min-w-[500px]">
             {/* description + subtasks + attachments */}
             <TaskBody task={task} canManage={canManage} />
 

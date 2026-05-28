@@ -49,15 +49,15 @@ export function SprintHeader({
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
-            <BreadcrumbLink href="/dashboard/admin">Dashboard</BreadcrumbLink>
+            <BreadcrumbLink href="/dashboard/member">Dashboard</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbLink href="/dashboard/admin/projects">Projects</BreadcrumbLink>
+            <BreadcrumbLink href="/dashboard/member/projects">Projects</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbLink href={`/dashboard/admin/projects/${projectId}`}>
+            <BreadcrumbLink href={`/dashboard/member/projects/${projectId}`}>
               {projectTitle}
             </BreadcrumbLink>
           </BreadcrumbItem>

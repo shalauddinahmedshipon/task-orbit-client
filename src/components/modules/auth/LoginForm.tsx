@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2, Lock } from "lucide-react";
+import { Loader2, Lock, User } from "lucide-react";
 
 import {
   Form,
@@ -13,6 +13,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -43,45 +44,64 @@ export default function LoginForm() {
   });
 
   const onSubmit = async (values: LoginInput) => {
-  try {
-    const res = await login(values).unwrap();
+    try {
+      const res = await login(values).unwrap();
 
-    dispatch(
-      setCredentials({
-        user: res.user,
-      })
-    );
+      dispatch(
+        setCredentials({
+          user: res.user,
+        })
+      );
 
-    toast.success("Login successful");
+      toast.success("Login successful");
 
-    router.push("/dashboard");
-  } catch (err: any) {
-    toast.error(err?.data?.message ?? "Invalid credentials");
-  }
-};
+      if (res.user.role == "member") {
+        router.push("/dashboard/member");
+      } else {
+        router.push("/dashboard/admin");
+      }
+    } catch (err: any) {
+      toast.error(err?.data?.message ?? "Invalid credentials");
+    }
+  };
+
+  // ✅ DEMO CREDENTIALS (ONLY UI FEATURE)
+  const fillAdmin = () => {
+    form.setValue("email", "admin@email.com");
+    form.setValue("password", "12345678");
+    toast.info("Admin credentials filled");
+  };
+
+  const fillMember = () => {
+    form.setValue("email", "member1@gmail.com");
+    form.setValue("password", "12345678");
+    toast.info("Member credentials filled");
+  };
 
   return (
-    <Card className="w-full max-w-md shadow-xl border-muted">
-      <CardHeader className="space-y-2 text-center">
-        <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
-          <Lock className="h-6 w-6 text-primary" />
+    <Card className="w-full max-w-md shadow-2xl border-0 bg-white/95 backdrop-blur rounded-2xl">
+
+      {/* HEADER */}
+      <CardHeader className="text-center space-y-3 pb-6">
+        <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-primary to-primary/70 shadow-lg">
+          <Lock className="h-7 w-7 text-white" />
         </div>
 
-        <CardTitle className="text-2xl font-bold">
-          Admin Login
+        <CardTitle className="text-3xl font-bold">
+          Welcome Back
         </CardTitle>
 
         <CardDescription>
-          Enter your credentials to access the dashboard
+          Sign in to continue to your dashboard
         </CardDescription>
       </CardHeader>
 
+      {/* FORM */}
       <CardContent>
         <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-5"
-          >
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+
+            {/* EMAIL */}
             <FormField
               control={form.control}
               name="email"
@@ -91,7 +111,7 @@ export default function LoginForm() {
                   <FormControl>
                     <Input
                       placeholder="admin@email.com"
-                      autoComplete="email"
+                      className="h-11"
                       {...field}
                     />
                   </FormControl>
@@ -100,6 +120,7 @@ export default function LoginForm() {
               )}
             />
 
+            {/* PASSWORD */}
             <FormField
               control={form.control}
               name="password"
@@ -110,7 +131,7 @@ export default function LoginForm() {
                     <Input
                       type="password"
                       placeholder="••••••••"
-                      autoComplete="current-password"
+                      className="h-11"
                       {...field}
                     />
                   </FormControl>
@@ -119,15 +140,41 @@ export default function LoginForm() {
               )}
             />
 
+            {/* DEMO BUTTONS */}
+            <div className="flex flex-col gap-2 pt-2">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={fillAdmin}
+                className="w-full border-dashed"
+              >
+                <User className="h-3.5 w-3.5 mr-2" />
+                Admin
+              </Button>
+
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={fillMember}
+                className="w-full border-dashed"
+              >
+                <User className="h-3.5 w-3.5 mr-2" />
+                Member
+              </Button>
+            </div>
+
+            {/* SUBMIT */}
             <Button
               type="submit"
-              className="w-full mt-3 py-4"
+              className="w-full h-11 font-semibold mt-2"
               disabled={isLoading}
             >
               {isLoading && (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               )}
-              Sign in
+              Sign In
             </Button>
           </form>
         </Form>

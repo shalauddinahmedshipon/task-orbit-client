@@ -116,11 +116,7 @@ export function AppSidebar(
       icon: BarChart3,
     },
 
-    {
-      title: "Settings",
-      url: "/dashboard/admin/settings",
-      icon: Settings,
-    },
+    
   ]
 
   /* ----------------------------------------
@@ -151,11 +147,7 @@ export function AppSidebar(
       icon: Clock3,
     },
 
-    {
-      title: "Profile",
-      url: "/dashboard/member/profile",
-      icon: User,
-    },
+   
   ]
 
   /* ----------------------------------------

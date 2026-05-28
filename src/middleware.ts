@@ -1,7 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
+import { decodeJwt } from "jose";
 
 const PUBLIC_ROUTES = ["/login"];
-const PROTECTED_ROUTES = ["/dashboard"];
+
+// shared routes (no role restriction)
+const BYPASS_ROUTES = [
+  "/dashboard/admin/tasks"
+];
 
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
@@ -12,25 +17,63 @@ export function middleware(req: NextRequest) {
     pathname.startsWith(route)
   );
 
-  const isProtectedRoute = PROTECTED_ROUTES.some((route) =>
+  const isBypassRoute = BYPASS_ROUTES.some((route) =>
     pathname.startsWith(route)
   );
 
-  // 🔒 Not logged in → trying to access protected route
-  if (isProtectedRoute && !accessToken) {
-    const loginUrl = new URL("/login", req.url);
-    return NextResponse.redirect(loginUrl);
+  let payload: any = null;
+
+  if (accessToken) {
+    try {
+      payload = decodeJwt(accessToken);
+    } catch {
+      payload = null;
+    }
   }
 
-  // ✅ Logged in → trying to access login page
-  if (isPublicRoute && accessToken) {
-    const dashboardUrl = new URL("/dashboard", req.url);
-    return NextResponse.redirect(dashboardUrl);
+  const role = payload?.role;
+
+  // ===============================
+  // 1. AUTH CHECK
+  // ===============================
+  if (!accessToken && pathname.startsWith("/dashboard")) {
+    return NextResponse.redirect(new URL("/login", req.url));
+  }
+
+  if (accessToken && !payload && pathname.startsWith("/dashboard")) {
+    return NextResponse.redirect(new URL("/login", req.url));
+  }
+
+  // ===============================
+  // 2. LOGIN REDIRECT
+  // ===============================
+  if (isPublicRoute && accessToken && payload) {
+    const redirectPath =
+      role === "member"
+        ? "/dashboard/member"
+        : "/dashboard/admin";
+
+    return NextResponse.redirect(new URL(redirectPath, req.url));
+  }
+
+  // ===============================
+  // 3. ROLE PROTECTION (SKIP BYPASS)
+  // ===============================
+  if (!isBypassRoute) {
+    if (role === "member" && pathname.startsWith("/dashboard/admin")) {
+      return NextResponse.redirect(new URL("/dashboard/member", req.url));
+    }
+
+    if (
+      (role === "admin" || role === "manager") &&
+      pathname.startsWith("/dashboard/member")
+    ) {
+      return NextResponse.redirect(new URL("/dashboard/admin", req.url));
+    }
   }
 
   return NextResponse.next();
 }
-
 
 export const config = {
   matcher: ["/login", "/dashboard/:path*"],

@@ -92,7 +92,7 @@ export default function UsersPage() {
 
         {/* ── table ───────────────────────────────────────────────────── */}
         {isLoading
-          ? <Skeleton className="h-64 rounded-xl" />
+          ? <Skeleton className="h-64 rounded-xl lg:min-w-[900px]" />
           : (
             <UserTable
               users={filtered}
